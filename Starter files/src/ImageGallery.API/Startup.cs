@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using ImageGallery.API.Entities;
 using ImageGallery.API.Services;
 using Microsoft.AspNetCore.Builder;
@@ -8,8 +9,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
 
 namespace ImageGallery.API
 {
@@ -21,7 +20,7 @@ namespace ImageGallery.API
         {
             Configuration = configuration;
         }
-        
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
@@ -42,7 +41,6 @@ namespace ImageGallery.API
 
             // register AutoMapper-related services
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -63,7 +61,7 @@ namespace ImageGallery.API
                         await context.Response.WriteAsync("An unexpected fault happened. Try again later.");
                     });
                 });
-                // The default HSTS value is 30 days. You may want to change this for 
+                // The default HSTS value is 30 days. You may want to change this for
                 // production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
@@ -72,7 +70,7 @@ namespace ImageGallery.API
 
             app.UseStaticFiles();
 
-            app.UseRouting(); 
+            app.UseRouting();
 
             app.UseEndpoints(endpoints =>
             {

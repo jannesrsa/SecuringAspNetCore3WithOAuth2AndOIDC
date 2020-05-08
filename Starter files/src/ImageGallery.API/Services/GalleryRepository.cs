@@ -1,7 +1,7 @@
-﻿using ImageGallery.API.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ImageGallery.API.Entities;
 
 namespace ImageGallery.API.Services
 {
@@ -11,20 +11,20 @@ namespace ImageGallery.API.Services
 
         public GalleryRepository(GalleryContext galleryContext)
         {
-            _context = galleryContext ?? 
+            _context = galleryContext ??
                 throw new ArgumentNullException(nameof(galleryContext));
         }
 
         public bool ImageExists(Guid id)
         {
             return _context.Images.Any(i => i.Id == id);
-        }       
+        }
 
         public Image GetImage(Guid id)
         {
             return _context.Images.FirstOrDefault(i => i.Id == id);
         }
-  
+
         public IEnumerable<Image> GetImages()
         {
             return _context.Images
@@ -35,7 +35,7 @@ namespace ImageGallery.API.Services
         {
             return _context.Images.Any(i => i.Id == id && i.OwnerId == ownerId);
         }
-        
+
         public void AddImage(Image image)
         {
             _context.Images.Add(image);
@@ -50,7 +50,7 @@ namespace ImageGallery.API.Services
         {
             _context.Images.Remove(image);
 
-            // Note: in a real-life scenario, the image itself should also 
+            // Note: in a real-life scenario, the image itself should also
             // be removed from disk.  We don't do this in this demo
             // scenario, as we refill the DB with image URIs (that require
             // the actual files as well) for demo purposes.
@@ -76,8 +76,7 @@ namespace ImageGallery.API.Services
                     _context.Dispose();
                     _context = null;
                 }
-
             }
-        }     
+        }
     }
 }

@@ -1,10 +1,10 @@
-﻿using ImageGallery.API.Entities;
+﻿using System;
+using ImageGallery.API.Entities;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System;
 
 namespace ImageGallery.API
 {
@@ -19,7 +19,7 @@ namespace ImageGallery.API
             {
                 try
                 {
-                    var context = scope.ServiceProvider.GetService<GalleryContext>();                   
+                    var context = scope.ServiceProvider.GetService<GalleryContext>();
                     // migrate & seed
                     context.Database.Migrate();
                 }

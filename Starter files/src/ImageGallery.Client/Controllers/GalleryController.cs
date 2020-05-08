@@ -1,23 +1,23 @@
-﻿using ImageGallery.Client.ViewModels;
-using ImageGallery.Model;
-using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
+using ImageGallery.Client.ViewModels;
+using ImageGallery.Model;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ImageGallery.Client.Controllers
-{ 
+{
     public class GalleryController : Controller
     {
         private readonly IHttpClientFactory _httpClientFactory;
 
         public GalleryController(IHttpClientFactory httpClientFactory)
         {
-            _httpClientFactory = httpClientFactory ?? 
+            _httpClientFactory = httpClientFactory ??
                 throw new ArgumentNullException(nameof(httpClientFactory));
         }
 
@@ -28,22 +28,21 @@ namespace ImageGallery.Client.Controllers
             var request = new HttpRequestMessage(
                 HttpMethod.Get,
                 "/api/images/");
-            
+
             var response = await httpClient.SendAsync(
                 request, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
 
             response.EnsureSuccessStatusCode();
 
             using (var responseStream = await response.Content.ReadAsStreamAsync())
-            {   
+            {
                 return View(new GalleryIndexViewModel(
                     await JsonSerializer.DeserializeAsync<List<Image>>(responseStream)));
-            }             
+            }
         }
 
         public async Task<IActionResult> EditImage(Guid id)
         {
-
             var httpClient = _httpClientFactory.CreateClient("APIClient");
 
             var request = new HttpRequestMessage(
@@ -56,7 +55,7 @@ namespace ImageGallery.Client.Controllers
             response.EnsureSuccessStatusCode();
 
             using (var responseStream = await response.Content.ReadAsStreamAsync())
-            { 
+            {
                 var deserializedImage = await JsonSerializer.DeserializeAsync<Image>(responseStream);
 
                 var editImageViewModel = new EditImageViewModel()
@@ -66,7 +65,7 @@ namespace ImageGallery.Client.Controllers
                 };
 
                 return View(editImageViewModel);
-            }     
+            }
         }
 
         [HttpPost]
@@ -79,8 +78,10 @@ namespace ImageGallery.Client.Controllers
             }
 
             // create an ImageForUpdate instance
-            var imageForUpdate = new ImageForUpdate() { 
-                Title = editImageViewModel.Title };
+            var imageForUpdate = new ImageForUpdate()
+            {
+                Title = editImageViewModel.Title
+            };
 
             // serialize it
             var serializedImageForUpdate = JsonSerializer.Serialize(imageForUpdate);
@@ -95,13 +96,13 @@ namespace ImageGallery.Client.Controllers
                 serializedImageForUpdate,
                 System.Text.Encoding.Unicode,
                 "application/json");
-            
+
             var response = await httpClient.SendAsync(
                 request, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
 
             response.EnsureSuccessStatusCode();
 
-            return RedirectToAction("Index");       
+            return RedirectToAction("Index");
         }
 
         public async Task<IActionResult> DeleteImage(Guid id)
@@ -152,8 +153,8 @@ namespace ImageGallery.Client.Controllers
             }
 
             // serialize it
-            var serializedImageForCreation = JsonSerializer.Serialize(imageForCreation);  
-            
+            var serializedImageForCreation = JsonSerializer.Serialize(imageForCreation);
+
             var httpClient = _httpClientFactory.CreateClient("APIClient");
 
             var request = new HttpRequestMessage(

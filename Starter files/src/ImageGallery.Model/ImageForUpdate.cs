@@ -6,6 +6,6 @@ namespace ImageGallery.Model
     {
         [Required]
         [MaxLength(150)]
-        public string Title { get; set; }      
+        public string Title { get; set; }
     }
 }

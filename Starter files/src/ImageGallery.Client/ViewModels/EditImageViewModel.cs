@@ -9,6 +9,6 @@ namespace ImageGallery.Client.ViewModels
         public string Title { get; set; }
 
         [Required]
-        public Guid Id { get; set; }  
+        public Guid Id { get; set; }
     }
 }
