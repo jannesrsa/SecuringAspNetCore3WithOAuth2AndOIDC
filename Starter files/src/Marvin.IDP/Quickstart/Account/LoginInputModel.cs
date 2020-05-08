@@ -3,7 +3,7 @@
 
 using System.ComponentModel.DataAnnotations;
 
-namespace Starter_files
+namespace Marvin.IDP
 {
     public class LoginInputModel
     {

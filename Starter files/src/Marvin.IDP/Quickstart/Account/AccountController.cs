@@ -17,7 +17,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Starter_files
+namespace Marvin.IDP
 {
     /// <summary>
     /// This sample controller implements a typical login/logout/provision workflow for local and external accounts.
@@ -28,11 +28,11 @@ namespace Starter_files
     [AllowAnonymous]
     public class AccountController : Controller
     {
-        private readonly IClientStore _clientStore;
-        private readonly IEventService _events;
-        private readonly IIdentityServerInteractionService _interaction;
-        private readonly IAuthenticationSchemeProvider _schemeProvider;
         private readonly TestUserStore _users;
+        private readonly IIdentityServerInteractionService _interaction;
+        private readonly IClientStore _clientStore;
+        private readonly IAuthenticationSchemeProvider _schemeProvider;
+        private readonly IEventService _events;
 
         public AccountController(
             IIdentityServerInteractionService interaction,
@@ -49,12 +49,6 @@ namespace Starter_files
             _clientStore = clientStore;
             _schemeProvider = schemeProvider;
             _events = events;
-        }
-
-        [HttpGet]
-        public IActionResult AccessDenied()
-        {
-            return View();
         }
 
         /// <summary>
@@ -231,47 +225,15 @@ namespace Starter_files
             return View("LoggedOut", vm);
         }
 
+        [HttpGet]
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
+
         /*****************************************/
         /* helper APIs for the AccountController */
         /*****************************************/
-
-        private async Task<LoggedOutViewModel> BuildLoggedOutViewModelAsync(string logoutId)
-        {
-            // get context information (client name, post logout redirect URI and iframe for federated signout)
-            var logout = await _interaction.GetLogoutContextAsync(logoutId);
-
-            var vm = new LoggedOutViewModel
-            {
-                AutomaticRedirectAfterSignOut = AccountOptions.AutomaticRedirectAfterSignOut,
-                PostLogoutRedirectUri = logout?.PostLogoutRedirectUri,
-                ClientName = string.IsNullOrEmpty(logout?.ClientName) ? logout?.ClientId : logout?.ClientName,
-                SignOutIframeUrl = logout?.SignOutIFrameUrl,
-                LogoutId = logoutId
-            };
-
-            if (User?.Identity.IsAuthenticated == true)
-            {
-                var idp = User.FindFirst(JwtClaimTypes.IdentityProvider)?.Value;
-                if (idp != null && idp != IdentityServer4.IdentityServerConstants.LocalIdentityProvider)
-                {
-                    var providerSupportsSignout = await HttpContext.GetSchemeSupportsSignOutAsync(idp);
-                    if (providerSupportsSignout)
-                    {
-                        if (vm.LogoutId == null)
-                        {
-                            // if there's no current logout context, we need to create one
-                            // this captures necessary info from the current logged in user
-                            // before we signout and redirect away to the external IdP for signout
-                            vm.LogoutId = await _interaction.CreateLogoutContextAsync();
-                        }
-
-                        vm.ExternalAuthenticationScheme = idp;
-                    }
-                }
-            }
-
-            return vm;
-        }
 
         private async Task<LoginViewModel> BuildLoginViewModelAsync(string returnUrl)
         {
@@ -362,6 +324,44 @@ namespace Starter_files
 
             // show the logout prompt. this prevents attacks where the user
             // is automatically signed out by another malicious web page.
+            return vm;
+        }
+
+        private async Task<LoggedOutViewModel> BuildLoggedOutViewModelAsync(string logoutId)
+        {
+            // get context information (client name, post logout redirect URI and iframe for federated signout)
+            var logout = await _interaction.GetLogoutContextAsync(logoutId);
+
+            var vm = new LoggedOutViewModel
+            {
+                AutomaticRedirectAfterSignOut = AccountOptions.AutomaticRedirectAfterSignOut,
+                PostLogoutRedirectUri = logout?.PostLogoutRedirectUri,
+                ClientName = string.IsNullOrEmpty(logout?.ClientName) ? logout?.ClientId : logout?.ClientName,
+                SignOutIframeUrl = logout?.SignOutIFrameUrl,
+                LogoutId = logoutId
+            };
+
+            if (User?.Identity.IsAuthenticated == true)
+            {
+                var idp = User.FindFirst(JwtClaimTypes.IdentityProvider)?.Value;
+                if (idp != null && idp != IdentityServer4.IdentityServerConstants.LocalIdentityProvider)
+                {
+                    var providerSupportsSignout = await HttpContext.GetSchemeSupportsSignOutAsync(idp);
+                    if (providerSupportsSignout)
+                    {
+                        if (vm.LogoutId == null)
+                        {
+                            // if there's no current logout context, we need to create one
+                            // this captures necessary info from the current logged in user
+                            // before we signout and redirect away to the external IdP for signout
+                            vm.LogoutId = await _interaction.CreateLogoutContextAsync();
+                        }
+
+                        vm.ExternalAuthenticationScheme = idp;
+                    }
+                }
+            }
+
             return vm;
         }
     }

@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Starter_files
+namespace Marvin.IDP
 {
     public class LoginViewModel : LoginInputModel
     {

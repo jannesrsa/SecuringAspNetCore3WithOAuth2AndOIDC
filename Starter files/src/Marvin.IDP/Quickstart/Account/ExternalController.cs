@@ -16,7 +16,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace Starter_files
+namespace Marvin.IDP
 {
     [SecurityHeaders]
     [AllowAnonymous]

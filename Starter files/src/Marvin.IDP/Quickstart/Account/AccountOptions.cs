@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Starter_files
+namespace Marvin.IDP
 {
     public class AccountOptions
     {

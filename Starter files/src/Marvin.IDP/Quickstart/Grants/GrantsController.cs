@@ -11,7 +11,7 @@ using IdentityServer4.Stores;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Starter_files
+namespace Marvin.IDP
 {
     /// <summary>
     /// This sample controller allows a user to revoke grants given to clients

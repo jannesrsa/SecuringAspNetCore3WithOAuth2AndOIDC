@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace Starter_files
+namespace Marvin.IDP
 {
     /// <summary>
     /// This controller processes the consent UI

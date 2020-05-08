@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace Starter_files
+namespace Marvin.IDP
 {
     public class ConsentViewModel : ConsentInputModel
     {

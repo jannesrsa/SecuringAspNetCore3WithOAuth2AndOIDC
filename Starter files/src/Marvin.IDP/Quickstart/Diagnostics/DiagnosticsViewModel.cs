@@ -7,7 +7,7 @@ using IdentityModel;
 using Microsoft.AspNetCore.Authentication;
 using Newtonsoft.Json;
 
-namespace Starter_files
+namespace Marvin.IDP
 {
     public class DiagnosticsViewModel
     {

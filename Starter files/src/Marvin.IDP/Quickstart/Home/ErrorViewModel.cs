@@ -3,7 +3,7 @@
 
 using IdentityServer4.Models;
 
-namespace Starter_files
+namespace Marvin.IDP
 {
     public class ErrorViewModel
     {

@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using IdentityServer4.Stores;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Starter_files
+namespace Marvin.IDP
 {
     public static class Extensions
     {

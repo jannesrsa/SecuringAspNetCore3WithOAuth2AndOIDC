@@ -4,7 +4,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Starter_files
+namespace Marvin.IDP
 {
     public class SecurityHeadersAttribute : ActionFilterAttribute
     {

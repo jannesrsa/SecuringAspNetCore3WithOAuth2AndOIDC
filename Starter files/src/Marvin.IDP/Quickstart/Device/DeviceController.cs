@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace Starter_files.Device
+namespace Marvin.IDP.Device
 {
     [Authorize]
     [SecurityHeaders]

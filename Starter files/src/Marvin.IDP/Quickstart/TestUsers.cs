@@ -6,7 +6,7 @@ using System.Security.Claims;
 using IdentityModel;
 using IdentityServer4.Test;
 
-namespace Starter_files
+namespace Marvin.IDP
 {
     public class TestUsers
     {
