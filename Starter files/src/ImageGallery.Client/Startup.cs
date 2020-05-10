@@ -85,6 +85,18 @@ namespace ImageGallery.Client
                 client.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
             });
 
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(
+                    "CanOrderFrame",
+                    policyBuilder =>
+                    {
+                        policyBuilder.RequireAuthenticatedUser();
+                        policyBuilder.RequireClaim("country", "be");
+                        policyBuilder.RequireClaim("subscriptionlevel", "PayingUser");
+                    });
+            });
+
             services.AddAuthentication(options =>
             {
                 options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -111,6 +123,8 @@ namespace ImageGallery.Client
                 options.Scope.Add("address");
                 options.Scope.Add("roles");
                 options.Scope.Add("imagegalleryapi");
+                options.Scope.Add("subscriptionlevel");
+                options.Scope.Add("country");
 
                 options.SaveTokens = true;
                 options.ClientSecret = "secret";
@@ -126,6 +140,8 @@ namespace ImageGallery.Client
                 options.ClaimActions.DeleteClaim("auth_time");
 
                 options.ClaimActions.MapUniqueJsonKey("role", "role");
+                options.ClaimActions.MapUniqueJsonKey("subscriptionlevel", "subscriptionlevel");
+                options.ClaimActions.MapUniqueJsonKey("country", "country");
 
                 options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
                 {
