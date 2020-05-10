@@ -175,7 +175,16 @@ namespace ImageGallery.Client.Controllers
             var response = await httpClient.SendAsync(
                 request, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
 
-            response.EnsureSuccessStatusCode();
+            if (!response.IsSuccessStatusCode)
+            {
+                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized ||
+                    response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                {
+                    return RedirectToAction("AccessDenied", "Authorization");
+                }
+
+                response.EnsureSuccessStatusCode();
+            }
 
             using (var responseStream = await response.Content.ReadAsStreamAsync())
             {
