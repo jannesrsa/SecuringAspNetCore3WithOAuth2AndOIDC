@@ -51,10 +51,15 @@ namespace ImageGallery.Client
                 options.ClientId = "imagegalleryclient";
                 options.ResponseType = "code";
                 options.UsePkce = true;
+
+                // (Defaults already in the OpenIdConnectOptions: https://github.com/dotnet/aspnetcore/blob/0a0e1ea0cdbe29f2fcd2291b900db98597387d77/src/Security/Authentication/OpenIdConnect/src/OpenIdConnectOptions.cs)
                 // options.CallbackPath = new PathString(""); // Defaults to ~/signin-oidc
-                //options.SignedOutCallbackPath = new PathString(""); // Default to ~/signout-callback-oidc
-                options.Scope.Add("openid");
-                options.Scope.Add("profile");
+                // options.SignedOutCallbackPath = new PathString(""); // Default to ~/signout-callback-oidc
+                // options.Scope.Add("openid");
+                // options.Scope.Add("profile");
+
+                options.Scope.Add("address");
+
                 options.SaveTokens = true;
                 options.ClientSecret = "secret";
                 options.GetClaimsFromUserInfoEndpoint = true;
@@ -62,7 +67,7 @@ namespace ImageGallery.Client
                 // With this nbf (not before) will be mapped to the ClaimsPrincipal.Claims.
                 //options.ClaimActions.Remove("nbf");
 
-                // The sid and idp claim will not be mapped to the ClaimsPrincipal.Claims.
+                // These claims will not be mapped to the ClaimsPrincipal.Claims.
                 options.ClaimActions.DeleteClaim("sid");
                 options.ClaimActions.DeleteClaim("idp");
                 options.ClaimActions.DeleteClaim("s_hash");
