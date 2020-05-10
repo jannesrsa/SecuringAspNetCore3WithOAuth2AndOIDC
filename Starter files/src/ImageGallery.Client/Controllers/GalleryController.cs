@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
+using IdentityModel.Client;
 using ImageGallery.Client.ViewModels;
 using ImageGallery.Model;
 using Microsoft.AspNetCore.Authentication;
@@ -163,8 +164,7 @@ namespace ImageGallery.Client.Controllers
         public async Task<IActionResult> Index()
         {
             // get the saved identity token
-            var identityToken = await HttpContext
-                .GetTokenAsync(OpenIdConnectParameterNames.IdToken);
+            var identityToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.IdToken);
 
             var httpClient = _httpClientFactory.CreateClient("APIClient");
 
@@ -191,6 +191,40 @@ namespace ImageGallery.Client.Controllers
 
             await HttpContext
                 .SignOutAsync(OpenIdConnectDefaults.AuthenticationScheme);
+        }
+
+        public async Task<IActionResult> OrderFrame()
+        {
+            var idpClient = _httpClientFactory.CreateClient("IDPClient");
+            var metadataResponse = await idpClient.GetDiscoveryDocumentAsync();
+
+            if (metadataResponse.IsError)
+            {
+                throw metadataResponse.Exception;
+            }
+
+            // get the saved access token
+            var accessToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
+
+            var userInfoResponse = await idpClient.GetUserInfoAsync(
+                new UserInfoRequest
+                {
+                    Address = metadataResponse.UserInfoEndpoint,
+                    Token = accessToken
+                });
+
+            if (userInfoResponse.IsError)
+            {
+                throw userInfoResponse.Exception;
+            }
+
+            var addressJson = userInfoResponse.Claims
+                .FirstOrDefault(c => c.Type == "address")
+                ?.Value;
+
+            var address = JsonSerializer.Deserialize<Address>(addressJson);
+
+            return View(new OrderFrameViewModel(address));
         }
     }
 }
