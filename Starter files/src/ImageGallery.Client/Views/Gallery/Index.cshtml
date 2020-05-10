@@ -4,19 +4,72 @@
 </div>
 
 <div class="container">
-    @foreach (var item in Model.Images)
-    {
-        <div class="pull-left col-md-4">
-            <div>
-                <img class="thumbnailImage" src="@("https://localhost:44366/images/" + item.FileName)" />
-            </div>
-            <div>
-                <div class="h5">@item.Title</div>
-                <div class="bottomMarginDefault">
-                    <a asp-action="EditImage" asp-controller="Gallery" asp-route-id="@item.Id">Edit title</a> |
-                    <a asp-action="DeleteImage" asp-controller="Gallery" asp-route-id="@item.Id">Delete image</a>
+    <div class="row">
+        @foreach (var item in Model.Images)
+        {
+            <div class="pull-left col-md-4">
+                <div>
+                    <img class="thumbnailImage" src="@("https://localhost:44366/images/" + item.FileName)" />
+                </div>
+                <div>
+                    <div class="h5">@item.Title</div>
+                    <div class="bottomMarginDefault">
+                        <a asp-action="EditImage" asp-controller="Gallery" asp-route-id="@item.Id">Edit title</a> |
+                        <a asp-action="DeleteImage" asp-controller="Gallery" asp-route-id="@item.Id">Delete image</a>
+                    </div>
                 </div>
             </div>
+        }
+    </div>
+
+    <div class="row">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Identity Info</h4>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Claim Type</th>
+                            <th>Claim Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var claim in User.Claims)
+                        {
+                            <tr>
+                                <td>@claim.Type</td>
+                                <td>@claim.Value</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         </div>
-    }
-</div> 
+    </div>
+
+    <div class="row">
+        <div class="form-group">
+            <label>Identity Token</label>
+
+            <textarea class="form-control" rows="5" id="identityToken">@Model.IdentityToken</textarea>
+        </div>
+        <button type="button" class="btn btn-info" onclick="myFunction()">Copy text</button>
+    </div>
+</div>
+
+@section scripts {
+
+    <script type="text/javascript">
+        function myFunction() {
+            /* Get the text field */
+            var copyText = document.getElementById("identityToken");
+
+            /* Select the text field */
+            copyText.select();
+            copyText.setSelectionRange(0, 99999); /*For mobile devices*/
+
+            /* Copy the text inside the text field */
+            document.execCommand("copy");
+        }
+    </script>
+}

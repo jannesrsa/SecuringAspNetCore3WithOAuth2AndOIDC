@@ -66,3 +66,7 @@ textarea {
     width: 100%;
     height: auto;
 }
+
+#identityToken {
+    max-width: 100%
+}

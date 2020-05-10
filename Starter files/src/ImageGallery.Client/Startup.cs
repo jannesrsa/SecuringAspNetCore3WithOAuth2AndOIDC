@@ -24,6 +24,7 @@ namespace ImageGallery.Client
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews()
+                 .AddRazorRuntimeCompilation()
                  .AddJsonOptions(opts => opts.JsonSerializerOptions.PropertyNamingPolicy = null);
 
             // create an HttpClient used for accessing the API

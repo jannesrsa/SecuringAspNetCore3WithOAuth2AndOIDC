@@ -5,12 +5,14 @@ namespace ImageGallery.Client.ViewModels
 {
     public class GalleryIndexViewModel
     {
-        public IEnumerable<Image> Images { get; private set; }
-            = new List<Image>();
-
-        public GalleryIndexViewModel(IEnumerable<Image> images)
+        public GalleryIndexViewModel(IEnumerable<Image> images, string identityToken)
         {
             Images = images;
+            IdentityToken = identityToken;
         }
+
+        public string IdentityToken { get; }
+
+        public IEnumerable<Image> Images { get; } = new List<Image>();
     }
 }
