@@ -66,6 +66,7 @@ namespace ImageGallery.Client
                 // options.Scope.Add("profile");
 
                 options.Scope.Add("address");
+                options.Scope.Add("roles");
 
                 options.SaveTokens = true;
                 options.ClientSecret = "secret";
@@ -79,6 +80,8 @@ namespace ImageGallery.Client
                 options.ClaimActions.DeleteClaim("idp");
                 options.ClaimActions.DeleteClaim("s_hash");
                 options.ClaimActions.DeleteClaim("auth_time");
+
+                options.ClaimActions.MapUniqueJsonKey("role", "role");
             });
         }
 
