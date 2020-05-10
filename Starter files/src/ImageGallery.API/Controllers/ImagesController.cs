@@ -33,37 +33,13 @@ namespace ImageGallery.API.Controllers
                 throw new ArgumentNullException(nameof(mapper));
         }
 
-        [HttpGet()]
-        public IActionResult GetImages()
+        private string OwnerId
         {
-            var ownerId = User.Claims.FirstOrDefault(c=>c.Type =="sub")?.Value;
-
-            // get from repo
-            var imagesFromRepo = _galleryRepository.GetImages(ownerId);
-
-            // map to model
-            var imagesToReturn = _mapper.Map<IEnumerable<Model.Image>>(imagesFromRepo);
-
-            // return
-            return Ok(imagesToReturn);
-        }
-
-        [HttpGet("{id}", Name = "GetImage")]
-        public IActionResult GetImage(Guid id)
-        {
-            var imageFromRepo = _galleryRepository.GetImage(id);
-
-            if (imageFromRepo == null)
-            {
-                return NotFound();
-            }
-
-            var imageToReturn = _mapper.Map<Model.Image>(imageFromRepo);
-
-            return Ok(imageToReturn);
+            get => User.Claims.FirstOrDefault(c => c.Type == "sub")?.Value;
         }
 
         [HttpPost()]
+        [Authorize(Roles = "PayingUser")]
         public IActionResult CreateImage([FromBody] ImageForCreation imageForCreation)
         {
             // Automapper maps only the Title in our configuration
@@ -90,8 +66,7 @@ namespace ImageGallery.API.Controllers
 
             // ownerId should be set - can't save image in starter solution, will
             // be fixed during the course
-            //imageEntity.OwnerId = ...;
-
+            imageEntity.OwnerId = OwnerId;
             // add and save.
             _galleryRepository.AddImage(imageEntity);
 
@@ -119,6 +94,36 @@ namespace ImageGallery.API.Controllers
             _galleryRepository.Save();
 
             return NoContent();
+        }
+
+        [HttpGet("{id}", Name = "GetImage")]
+        public IActionResult GetImage(Guid id)
+        {
+            var imageFromRepo = _galleryRepository.GetImage(id);
+
+            if (imageFromRepo == null)
+            {
+                return NotFound();
+            }
+
+            var imageToReturn = _mapper.Map<Model.Image>(imageFromRepo);
+
+            return Ok(imageToReturn);
+        }
+
+        [HttpGet()]
+        public IActionResult GetImages()
+        {
+            var ownerId = OwnerId;
+
+            // get from repo
+            var imagesFromRepo = _galleryRepository.GetImages(ownerId);
+
+            // map to model
+            var imagesToReturn = _mapper.Map<IEnumerable<Model.Image>>(imagesFromRepo);
+
+            // return
+            return Ok(imagesToReturn);
         }
 
         [HttpPut("{id}")]
