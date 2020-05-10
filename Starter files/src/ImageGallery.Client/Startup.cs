@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
@@ -18,6 +20,7 @@ namespace ImageGallery.Client
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -55,6 +58,15 @@ namespace ImageGallery.Client
                 options.SaveTokens = true;
                 options.ClientSecret = "secret";
                 options.GetClaimsFromUserInfoEndpoint = true;
+
+                // With this nbf (not before) will be mapped to the ClaimsPrincipal.Claims.
+                //options.ClaimActions.Remove("nbf");
+
+                // The sid and idp claim will not be mapped to the ClaimsPrincipal.Claims.
+                options.ClaimActions.DeleteClaim("sid");
+                options.ClaimActions.DeleteClaim("idp");
+                options.ClaimActions.DeleteClaim("s_hash");
+                options.ClaimActions.DeleteClaim("auth_time");
             });
         }
 
