@@ -195,8 +195,41 @@ namespace ImageGallery.Client.Controllers
 
         public async Task Logout()
         {
+            var client = _httpClientFactory.CreateClient("IDPClient");
+
+            var discoveryDocumentResonse = await client.GetDiscoveryDocumentAsync();
+
+            var accessTokenRevokeResponse = await client.RevokeTokenAsync(
+                 new TokenRevocationRequest
+                 {
+                     Address = discoveryDocumentResonse.RevocationEndpoint,
+                     ClientId = "imagegalleryclient",
+                     ClientSecret = "secret",
+                     Token = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken)
+                 });
+
+            if (accessTokenRevokeResponse.IsError)
+            {
+                throw accessTokenRevokeResponse.Exception;
+            }
+
+            var refreshTokenRevokeResponse = await client.RevokeTokenAsync(
+                new TokenRevocationRequest
+                {
+                    Address = discoveryDocumentResonse.RevocationEndpoint,
+                    ClientId = "imagegalleryclient",
+                    ClientSecret = "secret",
+                    Token = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.RefreshToken
+                    )
+                });
+
+            if (refreshTokenRevokeResponse.IsError)
+            {
+                throw refreshTokenRevokeResponse.Exception;
+            }
+
             await HttpContext
-                .SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+               .SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
             await HttpContext
                 .SignOutAsync(OpenIdConnectDefaults.AuthenticationScheme);
