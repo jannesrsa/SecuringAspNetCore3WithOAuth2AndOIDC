@@ -39,6 +39,7 @@ namespace ImageGallery.API
                 {
                     options.Authority = "https://localhost:44318";
                     options.ApiName = "imagegalleryapi";
+                    //options.ApiSecret = "apisecret";
                 });
 
             services.AddAuthorization(options =>

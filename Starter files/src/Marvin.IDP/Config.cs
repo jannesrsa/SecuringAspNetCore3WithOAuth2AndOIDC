@@ -17,6 +17,9 @@ namespace Marvin.IDP
                     "Image Gallery API",
                     new []{ "role" }
                     )
+                //{
+                //    ApiSecrets = { new Secret("apisecret".Sha256()) }
+                //}
             };
 
         public static IEnumerable<Client> Clients =>
@@ -24,6 +27,7 @@ namespace Marvin.IDP
             {
                 new Client
                 {
+                    //AccessTokenType = AccessTokenType.Reference,
                     AccessTokenLifetime = 120,
                     AllowOfflineAccess = true,
                     UpdateAccessTokenClaimsOnRefresh = true,
